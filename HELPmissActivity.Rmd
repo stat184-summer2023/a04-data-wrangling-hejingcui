@@ -1,9 +1,7 @@
 ---
 title: "HELPmiss (Data Verbs) Activity"
 author: "YOUR NAME HERE"
-output:
-  html_document:
-    df_print: paged
+output: html_notebook
 ---
 
 ## Set Up:
@@ -14,7 +12,7 @@ rm(list = ls())     # clean up your R environment
 # load packages
 library(tidyverse)  # includes lots of data verbs like `group_by()` and `summarise()`
 library(mosaicData) # includes the `HELPmiss` data set 
-
+library(dplyr)
 
 # Load the `HELPmiss` data set into our RStudio environment
 data("HELPmiss", package = "mosaicData")
@@ -47,21 +45,25 @@ data("HELPmiss", package = "mosaicData")
 
 ```{r}
 #Your code here 
-
+row_count <- HELPmiss %>% summarize(count = n())
+print(paste("number of people in study: ", row_count))
 ```
 
 2.  total number of times in the past 6 months entered a detox program (measured at baseline) for all the people in `HELPmiss`.
 
 ```{r}
 #Your code here 
-
+# need to remove na otherwise the result will be na
+data <- HELPmiss %>% summarize(total = sum(e2b, na.rm = TRUE))
+data$total
 ```
 
 3.  mean time (in days) to first use of any substance post-detox for all the people in `HELPmiss`
 
 ```{r}
 #Your code here 
-
+data <- HELPmiss %>% summarize(avg = mean(daysanysub, na.rm = TRUE))
+data$avg
 ```
 
 ## Task 3: Group Summaries
