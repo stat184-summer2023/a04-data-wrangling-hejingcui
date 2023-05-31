@@ -1,6 +1,6 @@
 ---
 title: "HELPmiss (Data Verbs) Activity"
-author: "YOUR NAME HERE"
+author: "Hejing Cui"
 output: html_notebook
 ---
 
@@ -32,7 +32,7 @@ data("HELPmiss", package = "mosaicData")
 *Write several sentences (or a bullet list) describing the HELP Study and the resulting `HELPmiss` data. Your description should investigate basic data provenance (e.g., Who, What, When, Where, Why, How), explain the setting for the data, specify what each case represents in the data, and remark on inclusion/exclusion criteria.*
 
 -   investigate by searching R help documentation
--   there's a research paper cited where additional detail is provided\\
+-   there's a research paper cited where additional detail is provided
 -   The HELP study was a clinical trial on adult inpatients recruited from detoxification unit. The end goal is assigning patients to corresponding primary medical care. For each record, there is a treat variable indicating whether the patient was randomized to HELP clinic.
 -   Patients in the study are all adults who spoke Spanish or English and have alcohol, heroin or cocaine history.
 -   This dataset is a subset of HELPfull data, including 5 timepoints and additional variables
@@ -80,28 +80,69 @@ data$avg
 
 ```{r}
 #Your code here
+# 1. number of people (cases) in HELPmiss study
+HELPmiss %>% group_by(sex) %>% summarize(num_of_people = n())
+# I observed that most patients are male
+# male is around 3/4 of total patients population.
 
+# 2. total number of times in the past 6 months entered a detox program (measured at baseline) for all the people in HELPmiss
+HELPmiss %>% group_by(sex) %>% summarize(total = sum(e2b, na.rm = TRUE))
+# I observed that male are much more likely to enter a detox program comparing with female
+
+# 3. mean time (in days) to first use of any substance post-detox for all the people in HELPmiss
+HELPmiss %>% group_by(sex) %>% summarize(avg = mean(daysanysub, na.rm = TRUE))
+# female on average takes longer in terms of first use of substance post-detox
 ```
 
 ### homeless or not
 
 ```{r}
 #Your code here
+# 1. number of people (cases) in HELPmiss study
+HELPmiss %>% group_by(homeless) %>% summarize(num_of_people = n())
+# I observed that the distribution on homeless and not homeless are pretty close
 
+# 2. total number of times in the past 6 months entered a detox program (measured at baseline) for all the people in HELPmiss
+HELPmiss %>% group_by(homeless) %>% summarize(total = sum(e2b, na.rm = TRUE))
+# I observed that homeless are much more likely to enter a detox program comparing with housed
+
+# 3. mean time (in days) to first use of any substance post-detox for all the people in HELPmiss
+HELPmiss %>% group_by(homeless) %>% summarize(avg = mean(daysanysub, na.rm = TRUE))
+# housed on average takes longer in terms of first use of substance post-detox but the number is pretty close to homeless
 ```
 
 ### substance
 
 ```{r}
 #Your code here
+# 1. number of people (cases) in HELPmiss study
+HELPmiss %>% group_by(substance) %>% summarize(num_of_people = n())
+# I observed that the most patients have alcohol history, then cocaine, then heroin
 
+# 2. total number of times in the past 6 months entered a detox program (measured at baseline) for all the people in HELPmiss
+HELPmiss %>% group_by(substance) %>% summarize(total = sum(e2b, na.rm = TRUE))
+# I observed that alcohol and heroin patients are much more likely to enter a detox program in past 6 months
+
+# 3. mean time (in days) to first use of any substance post-detox for all the people in HELPmiss
+HELPmiss %>% group_by(substance) %>% summarize(avg = mean(daysanysub, na.rm = TRUE))
+# patients have cocaine history on average takes longer in terms of first use of substance post-detox but the number is pretty close to alcohol
 ```
 
 ### homeless versus housed broken down by sex
 
 ```{r}
 #Your code here
+# 1. number of people (cases) in HELPmiss study
+HELPmiss %>% group_by(homeless, sex) %>% summarize(num_of_people = n())
+# Gender distribution appears to be the same with task 1. In both housed and homeless, there are more male patients comparing with female
 
+# 2. total number of times in the past 6 months entered a detox program (measured at baseline) for all the people in HELPmiss
+HELPmiss %>% group_by(homeless, sex) %>% summarize(total = sum(e2b, na.rm = TRUE))
+# In both homeless and housed group, male are more likely to enter a detox program in past 6 months.
+
+# 3. mean time (in days) to first use of any substance post-detox for all the people in HELPmiss
+HELPmiss %>% group_by(homeless, sex) %>% summarize(avg = mean(daysanysub, na.rm = TRUE))
+# in both housed and homeless groups, female on average has longer time duration on first use of any substance.
 ```
 
 ### homeless versus housed broken down by substance
