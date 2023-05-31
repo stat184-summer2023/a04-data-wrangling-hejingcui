@@ -13,6 +13,7 @@ rm(list = ls())     # clean up your R environment
 library(tidyverse)  # includes lots of data verbs like `group_by()` and `summarise()`
 library(mosaicData) # includes the `HELPmiss` data set 
 library(dplyr)
+library(ggplot2)
 
 # Load the `HELPmiss` data set into our RStudio environment
 data("HELPmiss", package = "mosaicData")
@@ -149,7 +150,17 @@ HELPmiss %>% group_by(homeless, sex) %>% summarize(avg = mean(daysanysub, na.rm 
 
 ```{r}
 #Your code here
+# 1. number of people (cases) in HELPmiss study
+HELPmiss %>% group_by(homeless, substance) %>% summarize(num_of_people = n())
+# In housed group, there are more patients with cocaine history comparing with other two substance while in homeless group, there are more patients with alcohol history.
 
+# 2. total number of times in the past 6 months entered a detox program (measured at baseline) for all the people in HELPmiss
+HELPmiss %>% group_by(homeless, substance) %>% summarize(total = sum(e2b, na.rm = TRUE))
+# We see a large number of homeless patients with alcohol and heroin history entered a detox program in past 6 months comparing with those in housed group
+
+# 3. mean time (in days) to first use of any substance post-detox for all the people in HELPmiss
+HELPmiss %>% group_by(homeless, substance) %>% summarize(avg = mean(daysanysub, na.rm = TRUE))
+# In housed group, patients with alcohol history spent the longest time for first use of substance on average. In homeless group, that is patients with cocaine history.
 ```
 
 ## Task 4: Data Visualization & Observations
@@ -160,5 +171,8 @@ HELPmiss %>% group_by(homeless, sex) %>% summarize(avg = mean(daysanysub, na.rm 
 
 ```{r}
 # Your Code here.
-
+data = subset(HELPmiss, substance=="alcohol")
+ggplot(data=data, aes(x=age, y=avg_drinks, color=sex)) + geom_line() + ggtitle("age vs average drinks per day for primary subtance alcohol abuse patients")
 ```
+
+I assumed that for patients whose primary substance abuse is alcohol, the average number of drinks per day should grow with their age. However, I found that the avg drinks is not correlated with age. But when looking at the plot grouped by sex, I've found that male on average consumes a lot more drinks per day comparing with female. The difference got amplified as age goes up.
